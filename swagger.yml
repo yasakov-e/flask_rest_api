@@ -1,0 +1,188 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with our server code
+  version: "1.0.0"
+  title: Products REST API
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/"
+
+# Paths supported by the server application
+paths:
+  /health:
+    get:
+      operationId: health.health
+      tags:
+        - "Health end-point"
+      summary: "Application state"
+      description: "Exposes current application state"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: string
+              application_run_time:
+                type: string
+  /products:
+    get:
+      operationId: products.index
+      tags:
+        - "Products"
+      summary: "The products data structure supported by the server application"
+      description: "Read the list of all products"
+      responses:
+        200:
+          description: "Success reading a products list"
+          schema:
+            type: "array"
+            items:
+              properties:
+                name:
+                  type: "string"
+                price:
+                  type: "string"
+                size:
+                  type: "string"
+    post:
+      operationId: products.create
+      tags:
+        - Products
+      summary: Bulk product creation
+      description: Create a bunch of new products
+      parameters:
+        - name: products
+          in: body
+          description: Product to create
+          required: True
+          schema:
+            type: array
+            items:
+              properties:
+                product_name:
+                  type: string
+                  description: Name of the product
+                product_price:
+                  type: number
+                  format: double
+                  description: Product price
+                size:
+                  type: string
+                  description: Product size
+      responses:
+        201:
+          description: Successfully created products
+          schema:
+            type: array
+            items:
+              properties:
+                product_id:
+                  type: integer
+                  description: Id of the product
+                product_name:
+                  type: string
+                  description: Name of the product
+                product_price:
+                  type: number
+                  format: double
+                  description: Price of the product
+                size:
+                  type: string
+                  description: Size of the product
+  /products/{product_id}:
+    get:
+      operationId: products.get_product
+      tags:
+        - Products
+      summary: Get a product by id
+      description: Get a product by id
+      parameters:
+        - name: product_id
+          in: path
+          description: Id of the product to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successfully gets a product by requested id
+          schema:
+            type: object
+            properties:
+              product_id:
+                type: integer
+                description: Id of the product
+              product_name:
+                type: string
+                description: Product name
+              product_price:
+                type: number
+                format: double
+                description: Product price
+              size:
+                type: string
+                description: Product size
+    put:
+      operationId: products.update
+      tags:
+        - Products
+      summary: Update a product
+      description: Update a product
+      parameters:
+        - name: product_id
+          in: path
+          description: Id the product to update
+          type: integer
+          required: True
+        - name: product
+          in: body
+          schema:
+            type: object
+            properties:
+              product_name:
+                type: string
+                description: Product name
+              product_price:
+                type: number
+                format: double
+                description: Product price
+              size:
+                type: string
+                description: Product size
+      responses:
+        200:
+          description: Successfully updated product
+          schema:
+            properties:
+              product_id:
+                type: integer
+                description: Id of the product
+              product_name:
+                type: string
+                description: Product name
+              product_price:
+                type: number
+                format: double
+                description: Product price
+              size:
+                type: string
+                description: Product size
+    delete:
+      operationId: products.delete
+      tags:
+        - Products
+      summary: Delete a product from the products list
+      description: Delete a product
+      parameters:
+        - name: product_id
+          in: path
+          type: integer
+          description: Id of the product to delete
+          required: true
+      responses:
+        204:
+          description: Successfully deleted a product
